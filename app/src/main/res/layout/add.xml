@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="30dp"
+        android:autofillHints="@string/et_price"
+        android:hint="@string/et_price"
+        android:inputType="number" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/et_price"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rb_food" />
+
+        <RadioButton
+            android:id="@+id/rb_shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/rb_shopping" />
+
+        <RadioButton
+            android:id="@+id/rb_ent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/rb_fun" />
+
+        <RadioButton
+            android:id="@+id/rb_toso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/rb_tosomeone" />
+
+        <RadioButton
+            android:id="@+id/rb_Nan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/rb_Nan" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/radiogroup"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
+        android:autofillHints="@string/et_content"
+        android:hint="@string/et_content"
+        android:inputType="text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/et_content">
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/et_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/btn_add"
+            android:textColorHint="#fff" />
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/et_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/btn_save"
+            android:textColorHint="#fff" />
+    </LinearLayout>
+
+
+</RelativeLayout>

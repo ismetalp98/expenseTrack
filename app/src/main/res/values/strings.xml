@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+
+    <string name="rb_food">Food</string>
+    <string name="rb_shopping">Shopping</string>
+    <string name="rb_fun">Entertainment</string>
+    <string name="rb_tosomeone">To someone</string>
+    <string name="rb_Nan">Nan</string>
+
+
+    <string name="et_price">Price</string>
+    <string name="et_content">Content</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_save">Save</string>
+
+
+    <string name="btn_calculate">Calculate</string>
+</resources>
