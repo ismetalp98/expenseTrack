@@ -29,16 +29,16 @@ public class Main extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Button btn_calculate;
     private FloatingActionButton btn_add;
-    private SharedPreferences mPrefs;
-    private ArrayList<Expense> mExpenses;
+    private FirebaseFirestore fStore;
+    private FirestoreRecyclerAdapter<Expense, ItemViewHolder> expenseAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mPrefs = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        fStore = FirebaseFirestore.getInstance();
 
-        getExpenses();
+        expenseAdapter = getExpenses();
         recyclerView = findViewById(R.id.listview);
         btn_calculate = findViewById(R.id.btn_calc);
         btn_add = findViewById(R.id.btn_new);
@@ -52,25 +52,71 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext());
-        linearLayout.setStackFromEnd(false);
-        recyclerView.setLayoutManager(linearLayout);
+      recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+      recyclerView.setAdapter(noteAdapter);
+    }
+    
+    
 
-        ExpenseAdapter expenseAdapter = new ExpenseAdapter(Main.this,mExpenses);
-        recyclerView.setAdapter(expenseAdapter);
+    public FirestoreRecyclerAdapter getExpenses() {
+
+
+         query = fStore.collection("Expenses");
+
+
+        FirestoreRecyclerOptions<Item> allExpenses = new FirestoreRecyclerOptions.Builder<Expense>()
+                .setQuery(query, Expense.class)
+                .build();
+
+        noteAdapter = new FirestoreRecyclerAdapter<Expense, ItemViewHolder>(allExpenses) {
+
+
+            @Override
+            protected void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, int i, @NonNull final Expense expense) {
+                final String docId = noteAdapter.getSnapshots().getSnapshot(i).getId();
+                itemViewHolder.price.setText(String.valueOf(expense.getPrice()));
+                itemViewHolder.date.setText(String.valueOf(expense.getContent()));
+                itemViewHolder.content.setText(String.valueOf(expense.getDate()));
+
+     
+            }
+
+            @NonNull
+            @Override
+            public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense, parent, false);
+                return new ItemViewHolder(view);
+            }
+        };
+        return noteAdapter;
+    }
+    
+ public class ItemViewHolder extends RecyclerView.ViewHolder {
+        TextView price,content,date;
+        View view;
+
+
+        public ItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            price = itemView.findViewById(R.id.tv_price);
+            content = itemView.findViewById(R.id.tv_content);
+            date = itemView.findViewById(R.id.tv_date);
+            view = itemView;
+        }
+    }
+    
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        expenseAdapter.startListening();
     }
 
-    public void getExpenses() {
-
-        Gson gson = new Gson();
-        String json = mPrefs.getString("myExpenses", null);
-        Type type = new TypeToken<ArrayList<Expense>>() {
-        }.getType();
-        mExpenses = gson.fromJson(json, type);
-
-        if (mExpenses == null) {
-            mExpenses = new ArrayList<>();
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (noteAdapter != null) {
+            expenseAdapter.stopListening();
         }
     }
 }
