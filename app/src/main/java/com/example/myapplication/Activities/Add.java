@@ -30,7 +30,7 @@ public class Add extends AppCompatActivity {
     private EditText et_price,et_content;
     private Button btn_add,btn_save;
     private RadioGroup radioGroup;
-    private SharedPreferences mPrefs;
+    private FirebaseFirestore fStore;
     private ArrayList<Expense> mExpenses ;
     private int addcount = 0;
 
@@ -39,11 +39,11 @@ public class Add extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add);
-        mPrefs = getSharedPreferences("shared preferences",MODE_PRIVATE);
+        
         getExpenses();
 
 
-
+        fStore = FirebaseFirestore.getInstance();
         radioGroup = findViewById(R.id.radiogroup);
 
         et_price = findViewById(R.id.et_price);
@@ -55,14 +55,18 @@ public class Add extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                writeToFile();
+               addToArray();
+                
+               et_price.setText("");
+               et_content.setText("");
+                
             }
         });
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                writeToFile();
             }
         });
 
@@ -78,28 +82,20 @@ public class Add extends AppCompatActivity {
 
     public void  writeToFile()
     {
-        /*String pattern = "MM-yyyy";
+        String pattern = "MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(new Date());*/
-
-        SharedPreferences.Editor prefedit = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(mExpenses);
-        prefedit.putString("myExpenses",json);
-        prefedit.apply();
-
-    }
-
-    public void getExpenses() {
-
-        Gson gson = new Gson();
-        String json = mPrefs.getString("myExpenses", null);
-        Type type = new TypeToken<ArrayList<Expense>>() {
-        }.getType();
-        mExpenses = gson.fromJson(json, type);
-
-        if (json == null) {
-            mExpenses = new ArrayList<>();
+        String date = simpleDateFormat.format(new Date());
+        
+        DocumentReference documentReference = fStore.collection("Expenses").document(date);
+        for(int i = 0 ; i < mExpenses.size() ; i++ )
+        {
+            Expense tempt = mExpenses.get(i);
+            HashMap<String, Object> item = new HashMap<>();
+            item.put("content", tempt.getContent());
+            item.put("catagory", tempt.getCatagory());
+            item.put("price", String.valueOf(tempt.getPrice()));
+            item.put("date",tempt.getDate());
+            documentReference.set(item);
         }
     }
 
